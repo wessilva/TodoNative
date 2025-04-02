@@ -5,6 +5,10 @@ import { AntDesign } from "@expo/vector-icons"
 
 type MainButtonProps = {
     onPress: () => void;
+    backgroundColor?: string;
+    icon?: string;
+    size?: number;
+    color?: string;
 };
 
 export const MainButton = ({ onPress }: MainButtonProps) => {

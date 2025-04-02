@@ -16,5 +16,5 @@ export default function App() {
 }
 
 const styles = {
-  container: `flex-1   justify-center bg-[#1A1A1A]  `,
+  container: `flex-1   justify-center  `,
 }
