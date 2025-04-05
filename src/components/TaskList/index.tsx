@@ -5,6 +5,7 @@ import { Feather } from "@expo/vector-icons";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { TaskEmpty } from "../TaskEmpty";
 import { useState } from "react";
+import { ConfirmationModal } from "../Modal";
 
 interface TasklistProps {
     tasks: Task[];
@@ -16,9 +17,31 @@ export const TaskList = ({ tasks, onToggleTask, onRemoveTask }: TasklistProps) =
 
     const [pressedId, setPressedId] = useState<string | null>(null);
     const [removingId, setRemovingId] = useState<string | null>(null)
+    const [modalVisible, setModalVisible] = useState(false);
+    const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
+
+    const handleRemoveRequest = (id: string) => {
+
+        const task = tasks.find(task => task.id === id)
+
+        if (task && !task.completed) {
+            setTaskToDelete(id)
+            setModalVisible(true)
+        } else {
+            handleRemoveWithDelay(id)
+        }
+
+    }
+
+    const handleConfirmDelete = () => {
+        if (taskToDelete) {
+            handleRemoveWithDelay(taskToDelete);
+            setModalVisible(false);
+            setTaskToDelete(null);
+        }
+    };
 
     const handleRemoveWithDelay = (id: string) => {
-
         setRemovingId(id);
 
         setTimeout(() => {
@@ -26,12 +49,6 @@ export const TaskList = ({ tasks, onToggleTask, onRemoveTask }: TasklistProps) =
             setRemovingId(null);
         }, 400);
     };
-
-    if (tasks.length === 0) {
-        return (
-            <TaskEmpty />
-        )
-    }
 
     return (
         <View className="flex items-center p-4 h-screen-safe">
@@ -63,7 +80,7 @@ export const TaskList = ({ tasks, onToggleTask, onRemoveTask }: TasklistProps) =
                                     ? <Feather name="trash-2" size={20} color="#E25858" />
                                     : ''
                                 }`}
-                            onPress={() => handleRemoveWithDelay(item.id)}
+                            onPress={() => handleRemoveRequest(item.id)}
                             onPressIn={() => setPressedId(item.id)}
                             onPressOut={() => setPressedId(null)}
                         >
@@ -75,6 +92,13 @@ export const TaskList = ({ tasks, onToggleTask, onRemoveTask }: TasklistProps) =
                         </TouchableOpacity>
                     </View>
                 )}
+            />
+            <ConfirmationModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onConfirm={handleConfirmDelete}
+                title="Confirmar exclusão"
+                message="Esta tarefa não está concluída. Tem certeza que deseja excluí-la?"
             />
         </View>
     );

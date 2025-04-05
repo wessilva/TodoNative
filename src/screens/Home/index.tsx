@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, SafeAreaView } from 'react-native';
+import { View, SafeAreaView, Alert } from 'react-native';
 import { Header } from 'src/components/Header';
 import { MainInput } from '~/components/MainInput';
 import { Separator } from '~/components/Separator';
@@ -20,7 +20,10 @@ export const HomeScreen = () => {
     }
 
     const removeTask = (id: string) => {
-        setTasks((prevTasks => prevTasks.filter(task => task.id !== id)))
+
+
+        setTasks((prevTasks) => prevTasks.filter(task => task.id !== id));
+
     }
 
     const completedTasks = tasks.filter(tasks => tasks.completed).length
